@@ -121,16 +121,20 @@ function saveSet(){const c=C();c.scale=V('sc');c.methods=V('me').split(/[,،\n]/
 function vTea(){const c=C(),h=c.halaqat.find(x=>x.id==S.hid),sc=scale(c);
 return tp('حلقة '+h.name)+`<p class="mu">${today()} — تظهر لكل طالب السور من آخر موضع وصل إليه حتى سورة النهاية.</p>`+c.students.filter(s=>s.h==h.id).map(s=>`<div class="card" id="c_${s.id}"><b>${E(s.name)}</b> <span class="pill">آخر موضع: ${SN[s.s]} ${s.a}</span><select id="st_${s.id}" onchange="tg('${s.id}')"><option value="r">حاضر وسمّع</option><option value="n">حاضر ولم يسمّع</option><option value="a">غائب</option></select><div id="f_${s.id}"><select id="m_${s.id}">${c.methods.map(m=>`<option>${E(m)}</option>`).join('')}</select><div class="row"><div><span class="mu">السورة</span><select id="s_${s.id}" onchange="sa('${s.id}')">${SO(s.s,s.s,Math.max(s.e,s.s))}</select></div><div><span class="mu">من آية</span><input id="a1_${s.id}" type="number" min="1" value="${s.a}"></div><div><span class="mu">إلى آية</span><input id="a2_${s.id}" type="number" min="1" value="${Math.min(s.a+9,AC[s.s])}"></div><div><span class="mu">عدد الوجوه</span><input id="fc_${s.id}" type="number" min="0" step="0.5" value="1"></div></div><select id="ev_${s.id}">${sc.map(x=>`<option>${E(x.l)}</option>`).join('')}</select><button class="o s" style="margin-top:6px" onclick="showAy('${s.id}')">عرض الآيات</button><div id="ay_${s.id}"></div></div></div>`).join('')+`<button class="np" style="width:100%" onclick="saveEv()">حفظ التقييم وإرسال الرسائل لأولياء الأمور</button>`}
 const QC={},AD=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
-async function getJ(u){const c=new AbortController(),t=setTimeout(()=>c.abort(),9000);try{const x=await fetch(u,{signal:c.signal});if(!x.ok)throw 0;return await x.json()}finally{clearTimeout(t)}}
-async function loadSurah(n){if(QC[n])return QC[n];try{const j=JSON.parse(localStorage.getItem('q2_'+n));if(j&&j.r&&j.r.length==AC[n]){QC[n]=j;return j}}catch(e){}
-let r=null,src='';
-try{const d=await getJ('https://api.quran.com/api/v4/quran/verses/qpc_hafs?chapter_number='+n);const t=(d.verses||[]).map(v=>v.text_qpc_hafs||v.text_uthmani||v.text);if(t.length==AC[n]&&t.every(x=>typeof x=='string'&&x.length)){r=t;src='مجمع الملك فهد (QPC Hafs)'}}catch(e){}
-if(!r){try{const d=await getJ('https://api.alquran.cloud/v1/surah/'+n+'/quran-uthmani');const t=d.data.ayahs.map(a=>{let x=a.text;if(n>1&&n!=9&&a.numberInSurah==1)x=x.split(' ').slice(4).join(' ');return x});if(t.length==AC[n]&&t.every(x=>x.length)){r=t;src='نص عثماني (مصدر احتياطي)'}}catch(e){}}
-if(!r)throw 0;const o={r,src};QC[n]=o;try{localStorage.setItem('q2_'+n,JSON.stringify(o))}catch(e){}return o}
+async function getJ(u){const c=new AbortController(),t=setTimeout(()=>c.abort(),9000);try{const x=await fetch(u,{signal:c.signal});if(!x.ok)throw new Error('HTTP '+x.status);return await x.json()}finally{clearTimeout(t)}}
+const nb=t=>t.replace(/[\u064B-\u065F\u0670\u06D6-\u06ED\u0640]/g,'').replace(/\u0671/g,'ا');
+function nobism(t,n){if(n>1&&n!=9&&nb(t).startsWith('بسم الله الرحمن الرحيم '))return t.split(' ').slice(4).join(' ');return t}
+async function loadSurah(n){if(QC[n])return QC[n];try{const j=JSON.parse(localStorage.getItem('q3_'+n));if(j&&j.r&&j.r.length==AC[n]){QC[n]=j;return j}}catch(e){}
+let r=null,src='';const why=[];
+const ok=t=>t.length==AC[n]&&t.every(x=>typeof x=='string'&&x.length);
+try{const d=await getJ('https://api.quran.com/api/v4/quran/verses/qpc_hafs?chapter_number='+n);const t=(d.verses||[]).map(v=>v.text_qpc_hafs||v.text_uthmani||v.text);if(ok(t)){r=t;src='مجمع الملك فهد (QPC Hafs)'}else why.push('A:'+t.length)}catch(e){why.push('A:'+(e.message||e))}
+if(!r){try{const d=await getJ('https://cdn.jsdelivr.net/npm/quran-json@3.1.2/dist/chapters/'+n+'.json');const t=d.verses.map((v,k)=>k?v.text:nobism(v.text,n));if(ok(t)){r=t;src='موسوعة القرآن (QuranEnc) - مصدر احتياطي'}else why.push('B:'+t.length)}catch(e){why.push('B:'+(e.message||e))}}
+if(!r){try{const d=await getJ('https://api.alquran.cloud/v1/surah/'+n+'/quran-uthmani');const t=d.data.ayahs.map((a,k)=>k?a.text:nobism(a.text,n));if(ok(t)){r=t;src='نص عثماني (مصدر احتياطي)'}else why.push('C:'+t.length)}catch(e){why.push('C:'+(e.message||e))}}
+if(!r)throw new Error(why.join(' | '));const o={r,src};QC[n]=o;try{localStorage.setItem('q3_'+n,JSON.stringify(o))}catch(e){}return o}
 async function showAy(i){const b=$('ay_'+i);if(b.innerHTML){b.innerHTML='';return}
 const st=C().students.find(x=>x.id==i),n=+V('s_'+i);let a1=+V('a1_'+i)||1,a2=+V('a2_'+i)||a1;if(n==st.s)a1=Math.max(a1,st.a);a2=Math.min(Math.max(a2,a1),AC[n]);
 b.innerHTML='<p class="mu">جارٍ التحميل…</p>';
-try{const o=await loadSurah(n);b.innerHTML=`<div class="ay" dir="rtl">${o.r.slice(a1-1,a2).map((t,k)=>`${E(t)} <b>﴿${AD(a1+k)}﴾</b>`).join(' ')}</div><p class="mu">${SN[n]} (${a1}–${a2}) — المصدر: ${o.src}</p>`}catch(e){b.innerHTML='<p class="mu">تعذر تحميل النص، تأكد من الإنترنت.</p>'}}
+try{const o=await loadSurah(n);b.innerHTML=`<div class="ay" dir="rtl">${o.r.slice(a1-1,a2).map((t,k)=>`${E(t)} <b>﴿${AD(a1+k)}﴾</b>`).join(' ')}</div><p class="mu">${SN[n]} (${a1}–${a2}) — المصدر: ${o.src}</p>`}catch(e){b.innerHTML='<p class="mu">تعذر تحميل النص ('+E(e.message||'')+')</p>'}}
 function tg(i){$('f_'+i).style.display=V('st_'+i)=='r'?'':'none'}
 function sa(i){$('ay_'+i).innerHTML='';const s=+V('s_'+i);$('a2_'+i).max=AC[s];$('a1_'+i).max=AC[s]}
 function saveEv(){const c=C(),sc=scale(c),h=c.halaqat.find(x=>x.id==S.hid);let n=0;
