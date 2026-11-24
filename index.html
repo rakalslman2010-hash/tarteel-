@@ -125,11 +125,11 @@ async function getJ(u){const c=new AbortController(),t=setTimeout(()=>c.abort(),
 const nb=t=>t.replace(/[\u064B-\u065F\u0670\u06D6-\u06ED\u0640]/g,'').replace(/\u0671/g,'ا');
 function nobism(t,n){if(n>1&&n!=9&&nb(t).startsWith('بسم الله الرحمن الرحيم '))return t.split(' ').slice(4).join(' ');return t}
 async function loadSurah(n){if(QC[n])return QC[n];try{const j=JSON.parse(localStorage.getItem('q3_'+n));if(j&&j.r&&j.r.length==AC[n]){QC[n]=j;return j}}catch(e){}
-let r=null,src='';const why=[];
+let r=null,src='';const why=[],c=n+1;
 const ok=t=>t.length==AC[n]&&t.every(x=>typeof x=='string'&&x.length);
-try{const d=await getJ('https://api.quran.com/api/v4/quran/verses/qpc_hafs?chapter_number='+n);const t=(d.verses||[]).map(v=>v.text_qpc_hafs||v.text_uthmani||v.text);if(ok(t)){r=t;src='مجمع الملك فهد (QPC Hafs)'}else why.push('A:'+t.length)}catch(e){why.push('A:'+(e.message||e))}
-if(!r){try{const d=await getJ('https://cdn.jsdelivr.net/npm/quran-json@3.1.2/dist/chapters/'+n+'.json');const t=d.verses.map((v,k)=>k?v.text:nobism(v.text,n));if(ok(t)){r=t;src='موسوعة القرآن (QuranEnc) - مصدر احتياطي'}else why.push('B:'+t.length)}catch(e){why.push('B:'+(e.message||e))}}
-if(!r){try{const d=await getJ('https://api.alquran.cloud/v1/surah/'+n+'/quran-uthmani');const t=d.data.ayahs.map((a,k)=>k?a.text:nobism(a.text,n));if(ok(t)){r=t;src='نص عثماني (مصدر احتياطي)'}else why.push('C:'+t.length)}catch(e){why.push('C:'+(e.message||e))}}
+try{const d=await getJ('https://api.quran.com/api/v4/quran/verses/qpc_hafs?chapter_number='+c);const t=(d.verses||[]).map(v=>v.text_qpc_hafs||v.text_uthmani||v.text);if(ok(t)){r=t;src='مجمع الملك فهد (QPC Hafs)'}else why.push('A:'+t.length)}catch(e){why.push('A:'+(e.message||e))}
+if(!r){try{const d=await getJ('https://cdn.jsdelivr.net/npm/quran-json@3.1.2/dist/chapters/'+c+'.json');const t=d.verses.map((v,k)=>k?v.text:nobism(v.text,c));if(ok(t)){r=t;src='موسوعة القرآن (QuranEnc) - مصدر احتياطي'}else why.push('B:'+t.length)}catch(e){why.push('B:'+(e.message||e))}}
+if(!r){try{const d=await getJ('https://api.alquran.cloud/v1/surah/'+c+'/quran-uthmani');const t=d.data.ayahs.map((a,k)=>k?a.text:nobism(a.text,c));if(ok(t)){r=t;src='نص عثماني (مصدر احتياطي)'}else why.push('C:'+t.length)}catch(e){why.push('C:'+(e.message||e))}}
 if(!r)throw new Error(why.join(' | '));const o={r,src};QC[n]=o;try{localStorage.setItem('q3_'+n,JSON.stringify(o))}catch(e){}return o}
 async function showAy(i){const b=$('ay_'+i);if(b.innerHTML){b.innerHTML='';return}
 const st=C().students.find(x=>x.id==i),n=+V('s_'+i);let a1=+V('a1_'+i)||1,a2=+V('a2_'+i)||a1;if(n==st.s)a1=Math.max(a1,st.a);a2=Math.min(Math.max(a2,a1),AC[n]);
