@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>ترتيل</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f5a46"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
-<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&display=swap" rel="stylesheet"><style>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Amiri+Quran&display=swap" rel="stylesheet"><style>
 :root{--bg:#f4f1e8;--card:#fff;--tx:#1b2a25;--mu:#6b7a73;--pr:#0f5a46;--pr2:#14795e;--go:#c9a227;--bd:#dfd9c6;--in:#faf8f1;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a16;--card:#18271f;--tx:#e9efe9;--mu:#9bada4;--pr:#2e9c7c;--pr2:#3bb592;--go:#d9b648;--bd:#2b3d34;--in:#12201a}}
 *{box-sizing:border-box}html,body{margin:0}body{background:var(--bg);color:var(--tx);font-family:"Segoe UI",Tahoma,"Noto Naskh Arabic",Arial,sans-serif;font-size:15px;line-height:1.6}
@@ -24,6 +24,29 @@ button.o{background:none;color:var(--pr);border:1px solid var(--pr)}button.d{bac
 a.w{display:inline-block;background:#1fa855;color:#fff;border-radius:8px;padding:4px 10px;text-decoration:none;font-size:13px}
 .ay{font-family:"KFGQPC HAFS Uthmanic Script","Amiri Quran",serif;font-size:24px;line-height:2.3;text-align:justify;background:var(--in);border-radius:10px;padding:10px;margin:6px 0}.ay b{color:var(--go);font-size:17px}
 @media print{body{background:#fff;color:#000}.top,.tabs,.np{display:none!important}.card{border:0}}
+
+body{font-family:Tajawal,"Segoe UI",Tahoma,"Noto Naskh Arabic",Arial,sans-serif;font-size:16px}
+#app{padding-bottom:100px}
+input,select,textarea{font-size:16px;min-height:48px;padding:10px 12px}
+button{min-height:48px;font-weight:700;font-size:16px;border-radius:12px}
+button.s,.top button{min-height:40px}
+.card{border-radius:18px;padding:14px}
+.th{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}.th b{font-size:18px}
+.bar{height:8px;background:var(--in);border:1px solid var(--bd);border-radius:8px;overflow:hidden;margin-top:4px}.bar i{display:block;height:100%;background:var(--go)}
+.seg3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}.seg3 button{background:var(--in);color:var(--tx);border:2px solid var(--bd);padding:6px}
+.seg3 button.on[data-k=r]{background:var(--pr);border-color:var(--pr);color:#fff}.seg3 button.on[data-k=n]{background:var(--go);border-color:var(--go);color:#222}.seg3 button.on[data-k=a]{background:#b3382c;border-color:#b3382c;color:#fff}
+.seg button{border-width:2px;line-height:1.3}.seg small{font-weight:400}
+.frm{background:var(--in);border:2px dashed var(--go);border-radius:12px;padding:10px 12px;margin:6px 0}.frm .big{display:block;font-size:20px;color:var(--pr)}
+.stp{display:flex;gap:6px}.stp input{text-align:center;font-size:20px;font-weight:700;margin:3px 0}.stp button{width:52px;flex:none;padding:0;font-size:24px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 8px}.chips button{background:var(--in);color:var(--tx);border:2px solid var(--bd);min-height:44px;padding:6px 14px}.chips button.on{background:var(--pr);border-color:var(--pr);color:#fff}
+.pill.ok{background:var(--pr);color:#fff;border-color:var(--pr)}
+.tc[data-k]{border:2px solid var(--pr)}.tc[data-k=a]{opacity:.85}
+.sv{position:sticky;bottom:12px;width:100%;min-height:58px;font-size:18px;box-shadow:0 6px 18px #0005}.sv:disabled{background:var(--mu);box-shadow:none}
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--pr);color:#fff;padding:12px 20px;border-radius:12px;z-index:9;font-weight:700;box-shadow:0 6px 18px #0005}
+summary{cursor:pointer;color:var(--pr);font-weight:700;padding:10px 0;min-height:44px}
+.ay b.sn{display:block;text-align:center;font-size:15px}
+.tabs{position:fixed;bottom:0;left:0;right:0;z-index:5;margin:0;gap:4px;background:var(--card);border-top:1px solid var(--bd);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px))}
+.tabs button{flex:1;border:0;background:none;color:var(--mu)}.tabs button.on{background:var(--pr);color:#fff}
 </style></head><body><div id="app"></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
@@ -54,6 +77,16 @@ const E=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 const $=i=>document.getElementById(i);const V=i=>($(i)||{}).value||'';
 const C=()=>DB.cx.find(x=>x.id===S.cid);
+const rg=(a,b,d)=>{const r=[];for(let i=a;d>0?i<=b:i>=b;i+=d)r.push(i);return r};
+const dirOf=s=>s.dr||(s.e>=s.s0?1:-1),span=s=>rg(s.s,s.e,dirOf(s)),full=s=>rg(s.s0,s.e,dirOf(s)),fin=s=>s.a>AC[s.s]&&s.s==s.e;
+function prog(s){const d=dirOf(s);let t=0,x=0;full(s).forEach(i=>{t+=AC[i];if(d>0?i<s.s:i>s.s)x+=AC[i];else if(i==s.s)x+=Math.min(s.a-1,AC[i])});return t?Math.round(x/t*100):0}
+const bar=s=>`<div class="bar"><i style="width:${prog(s)}%"></i></div><div class="mu">${prog(s)}% من المنهج</div>`;
+function adv(s,s2,a2){s.s=s2;s.a=a2+1;if(s.a>AC[s2]&&s2!=s.e){s.s=s2+dirOf(s);s.a=1}}
+const rng=l=>l.s2==null||l.s2==l.s?SN[l.s]+' '+l.a1+'-'+l.a2:'من '+SN[l.s]+' '+l.a1+' إلى '+SN[l.s2]+' '+l.a2;
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3200)}
+const chips=(id,arr,def)=>`<input type="hidden" id="${id}" value="${E(def)}"><div class="chips">${arr.map(x=>`<button type="button" class="${x==def?'on':''}" onclick="pk('${id}',this)">${E(x)}</button>`).join('')}</div>`;
+function pk(id,b){$(id).value=b.textContent;[...b.parentNode.children].forEach(x=>x.classList.toggle('on',x==b))}
+function stp(id,d,k){const e=$(id),m=+e.min||0,x=+e.max||1e9;e.value=Math.min(x,Math.max(m,(+e.value||0)+d*k))}
 const SO=(s,from=0,to=113)=>SN.map((n,i)=>i>=from&&i<=to?`<option value="${i}"${i==s?' selected':''}>${i+1}. ${n}</option>`:'').join('');
 const logo=`<img src="${ICONURL}" alt="ترتيل">`;
 function newCx(n,wa,p){return{id:uid(),name:n,wa,pass:p||'1111',halaqat:[],students:[],logs:[],out:[],
@@ -87,11 +120,12 @@ function vSup(){const c=C();const T=[['st','الطلاب'],['ms','الرسائل
 return tp('مجمع '+c.name)+`<div class="tabs np">${T.map(([k,n])=>`<button class="${S.tab==k?'on':''}" onclick="S.tab='${k}';R()">${n}</button>`).join('')}</div>`+({st:tStu,ms:tMsg,rp:tRep,se:tSet}[S.tab])(c)}
 function hsel(c,v,id,all){return`<select id="${id}" ${id.startsWith('m_')?'':''}>${all?'<option value="">كل الحلقات</option>':''}${c.halaqat.map(h=>`<option value="${h.id}"${h.id==v?' selected':''}>${E(h.name)}</option>`).join('')}</select>`}
 function tStu(c){if(!c.halaqat.length)return'<div class="card">أضف حلقة أولاً من «الإعدادات».</div>';
-return`<div class="card"><h2>تسجيل طالب</h2><input id="sn" placeholder="اسم الطالب"><input id="sp" placeholder="جوال ولي الأمر" inputmode="tel">${hsel(c,'','sh')}<div class="row"><div><span class="mu">يبدأ من سورة</span><select id="s1">${SO(1)}</select></div><div><span class="mu">إلى سورة</span><select id="s2">${SO(113)}</select></div></div><button onclick="addSt()">تسجيل</button></div>`+
-c.halaqat.map(h=>`<div class="card"><h3>${E(h.name)} <span class="mu">${E(h.teacher||'')}</span></h3>${c.students.filter(s=>s.h==h.id).map(s=>`<div class="st"><b>${E(s.name)}</b> <span class="pill">${SN[s.s]} آية ${s.a}</span><div class="row"><div><span class="mu">نقل إلى حلقة</span><select onchange="mvH('${s.id}',this.value)">${c.halaqat.map(x=>`<option value="${x.id}"${x.id==s.h?' selected':''}>${E(x.name)}</option>`).join('')}</select></div><div><span class="mu">نقل إلى سورة</span><select onchange="mvS('${s.id}',this.value)">${SO(s.s,Math.min(s.s0,s.e),113)}</select></div></div></div>`).join('')||'<p class="mu">لا طلاب</p>'}</div>`).join('')}
-function addSt(){const c=C();if(!V('sn').trim())return alert('اكتب الاسم');const a=+V('s1'),b=+V('s2');c.students.push({id:uid(),name:V('sn').trim(),ph:V('sp'),h:V('sh'),s0:a,e:b,s:a,a:1});save();R()}
+return`<div class="card"><h2>تسجيل طالب جديد</h2><input id="sn" placeholder="اسم الطالب"><input id="sp" placeholder="جوال ولي الأمر" inputmode="tel">${hsel(c,'','sh')}<span class="mu">يبدأ منهج الطالب</span><input type="hidden" id="sd" value="1"><div class="seg"><button type="button" class="on" onclick="sd(1,this)">من الفاتحة<br><small>إلى الناس</small></button><button type="button" onclick="sd(-1,this)">من الناس<br><small>إلى الفاتحة</small></button></div><span class="mu">يبدأ من سورة</span><select id="s1">${SO(0)}</select><button style="width:100%;margin-top:8px" onclick="addSt()">تسجيل الطالب</button></div>`+
+c.halaqat.map(h=>`<div class="card"><h3>${E(h.name)} <span class="mu">${E(h.teacher||'')}</span></h3>${c.students.filter(s=>s.h==h.id).map(s=>`<div class="st"><div class="th"><b>${E(s.name)}</b><span class="pill${fin(s)?' ok':''}">${fin(s)?'أتمّ المنهج':SN[s.s]+' · آية '+s.a}</span></div>${bar(s)}<div class="mu">المنهج: ${SN[s.s0]} ← ${SN[s.e]}</div><details><summary>تعديل (نقل أو تغيير الموضع)</summary><span class="mu">نقل إلى حلقة</span><select onchange="mvH('${s.id}',this.value)">${c.halaqat.map(x=>`<option value="${x.id}"${x.id==s.h?' selected':''}>${E(x.name)}</option>`).join('')}</select><span class="mu">الموضع الحالي (سورة وآية)</span><div class="row"><select id="ms_${s.id}">${full(s).map(n=>`<option value="${n}"${n==s.s?' selected':''}>${SN[n]}</option>`).join('')}</select><input id="ma_${s.id}" type="number" min="1" inputmode="numeric" value="${Math.min(s.a,AC[s.s])}"></div><button class="o" style="width:100%" onclick="mvS('${s.id}')">حفظ الموضع</button></details></div>`).join('')||'<p class="mu">لا طلاب</p>'}</div>`).join('')}
+function sd(d,b){$('sd').value=d;[...b.parentNode.children].forEach(x=>x.classList.toggle('on',x==b));$('s1').value=d>0?0:113}
+function addSt(){const c=C();if(!V('sn').trim())return alert('اكتب اسم الطالب');const dr=+V('sd')||1,a=+V('s1');c.students.push({id:uid(),name:V('sn').trim(),ph:V('sp'),h:V('sh'),s0:a,e:dr>0?113:0,dr,s:a,a:1});save();toast('تم تسجيل الطالب');R()}
 function mvH(i,h){C().students.find(s=>s.id==i).h=h;save();R()}
-function mvS(i,v){const s=C().students.find(s=>s.id==i);s.s=+v;s.a=1;save();R()}
+function mvS(i){const s=C().students.find(s=>s.id==i),n=+V('ms_'+i);s.s=n;s.a=Math.max(1,Math.min(+V('ma_'+i)||1,AC[n]));save();toast('تم حفظ الموضع');R()}
 function msgFill(t,o){return t.replace(/\{(.+?)\}/g,(m,k)=>o[k]??m)}
 function tMsg(c){const sel=c.students.map(s=>`<label class="ck"><input type="checkbox" class="ms" value="${s.id}"><span>${E(s.name)} <span class="mu">${E((c.halaqat.find(h=>h.id==s.h)||{}).name||'')}</span></span></label>`).join('');
 return`<div class="card"><h2>رسالة عامة</h2><p class="mu">رقم واتساب المجمع: ${E(c.wa||'غير مربوط')}</p><textarea id="mt" placeholder="نص الرسالة"></textarea><label class="ck"><input type="checkbox" onchange="document.querySelectorAll('.ms').forEach(x=>x.checked=this.checked)"><b>تحديد الكل</b></label>${sel||'<p class="mu">لا طلاب</p>'}<button onclick="qMsg()">إضافة إلى الصادر</button></div>`+outbox(c)}
@@ -108,7 +142,7 @@ const hs={};
 sts.forEach(s=>{const ls=L.filter(l=>l.sid==s.id);const g=ls.filter(l=>l.g!=null).map(l=>l.g);g.forEach(x=>(hs[s.h]=hs[s.h]||[]).push(x));
 h+=`<tr><td>${E(s.name)}</td>${c.methods.map(m=>`<td>${ls.filter(l=>l.m==m).reduce((a,l)=>a+l.f,0)}</td>`).join('')}<td><b>${ls.reduce((a,l)=>a+(l.f||0),0)}</b></td><td>${avg(g)}</td><td>${ls.filter(l=>l.st=='a').length}</td></tr>`});
 h+=`</table></div><p><b>متوسط الحلقات:</b> ${c.halaqat.filter(x=>hs[x.id]).map(x=>E(x.name)+': '+avg(hs[x.id])).join(' | ')||'-'}</p><p><b>مجموع وجوه المجمع/الحلقة:</b> ${L.reduce((a,l)=>a+(l.f||0),0)}</p></div>`;
-if(r.d)h+=`<div class="card"><h2>التفصيل اليومي</h2><div class="tw"><table><tr><th>التاريخ</th><th>الطالب</th><th>النوع</th><th>التسميع</th><th>الوجوه</th><th>التقييم</th></tr>${L.sort((a,b)=>a.d<b.d?-1:1).map(l=>{const s=c.students.find(x=>x.id==l.sid);return`<tr><td>${l.d}</td><td>${E(s?s.name:'-')}</td><td>${l.st=='a'?'غائب':l.st=='n'?'حاضر بلا تسميع':E(l.m)}</td><td>${l.st=='r'?SN[l.s]+' '+l.a1+'-'+l.a2:'-'}</td><td>${l.f||0}</td><td>${E(l.ev||'-')}</td></tr>`}).join('')}</table></div></div>`;return h}
+if(r.d)h+=`<div class="card"><h2>التفصيل اليومي</h2><div class="tw"><table><tr><th>التاريخ</th><th>الطالب</th><th>النوع</th><th>التسميع</th><th>الوجوه</th><th>التقييم</th></tr>${L.sort((a,b)=>a.d<b.d?-1:1).map(l=>{const s=c.students.find(x=>x.id==l.sid);return`<tr><td>${l.d}</td><td>${E(s?s.name:'-')}</td><td>${l.st=='a'?'غائب':l.st=='n'?'حاضر بلا تسميع':E(l.m)}</td><td>${l.st=='r'?rng(l):'-'}</td><td>${l.f||0}</td><td>${E(l.ev||'-')}</td></tr>`}).join('')}</table></div></div>`;return h}
 /* SETTINGS */
 function tSet(c){return`<div class="card"><h2>الحلقات</h2>${c.halaqat.map(h=>`<div class="st">${E(h.name)} - ${E(h.teacher||'')} <span class="mu">(سر: ${E(h.pass)})</span> <button class="s d" onclick="delH('${h.id}')">حذف</button></div>`).join('')}<input id="hn" placeholder="اسم الحلقة"><input id="ht" placeholder="اسم المعلم"><input id="hp" placeholder="كلمة مرور المعلم (افتراضي 1111)"><button onclick="addH()">إضافة حلقة</button></div>
 <div class="card"><h2>طريقة التقييم</h2><p class="mu">سطر لكل تقدير بصيغة «الاسم:الدرجة». مثال: ممتاز:100 أو 10:10 أو 9:9</p><textarea id="sc">${E(c.scale)}</textarea><h2>طرق التسميع</h2><p class="mu">افصل بينها بفاصلة</p><input id="me" value="${E(c.methods.join('،'))}"></div>
@@ -118,8 +152,15 @@ function delH(i){const c=C(),n=c.students.filter(s=>s.h==i).length;if(n)return a
 function addH(){const c=C();if(!V('hn').trim())return;c.halaqat.push({id:uid(),name:V('hn').trim(),teacher:V('ht'),pass:V('hp')||'1111'});save();R()}
 function saveSet(){const c=C();c.scale=V('sc');c.methods=V('me').split(/[,،\n]/).map(x=>x.trim()).filter(Boolean);c.t1=V('t1');c.t2=V('t2');c.t3=V('t3');c.wa=V('wa');c.pass=V('cp')||'1111';save();alert('تم الحفظ')}
 /* TEACHER */
-function vTea(){const c=C(),h=c.halaqat.find(x=>x.id==S.hid),sc=scale(c);
-return tp('حلقة '+h.name)+`<p class="mu">${today()} — تظهر لكل طالب السور من آخر موضع وصل إليه حتى سورة النهاية.</p>`+c.students.filter(s=>s.h==h.id).map(s=>`<div class="card" id="c_${s.id}"><b>${E(s.name)}</b> <span class="pill">آخر موضع: ${SN[s.s]} ${s.a}</span><select id="st_${s.id}" onchange="tg('${s.id}')"><option value="r">حاضر وسمّع</option><option value="n">حاضر ولم يسمّع</option><option value="a">غائب</option></select><div id="f_${s.id}"><select id="m_${s.id}">${c.methods.map(m=>`<option>${E(m)}</option>`).join('')}</select><div class="row"><div><span class="mu">السورة</span><select id="s_${s.id}" onchange="sa('${s.id}')">${SO(s.s,s.s,Math.max(s.e,s.s))}</select></div><div><span class="mu">من آية</span><input id="a1_${s.id}" type="number" min="1" value="${s.a}"></div><div><span class="mu">إلى آية</span><input id="a2_${s.id}" type="number" min="1" value="${Math.min(s.a+9,AC[s.s])}"></div><div><span class="mu">عدد الوجوه</span><input id="fc_${s.id}" type="number" min="0" step="0.5" value="1"></div></div><select id="ev_${s.id}">${sc.map(x=>`<option>${E(x.l)}</option>`).join('')}</select><button class="o s" style="margin-top:6px" onclick="showAy('${s.id}')">عرض الآيات</button><div id="ay_${s.id}"></div></div></div>`).join('')+`<button class="np" style="width:100%" onclick="saveEv()">حفظ التقييم وإرسال الرسائل لأولياء الأمور</button>`}
+function vTea(){const c=C(),h=c.halaqat.find(x=>x.id==S.hid),sc=scale(c),L=c.students.filter(s=>s.h==h.id);
+return tp('حلقة '+h.name)+`<p class="mu">${today()} — اختر حالة كل طالب ثم سجّل تسميعه. البداية تلقائية من آخر موضع وصل إليه.</p>`+(L.map(s=>tcard(c,s,sc)).join('')||'<div class="card">لا طلاب في هذه الحلقة.</div>')+`<button id="sv" class="sv np" onclick="saveEv()" disabled>حفظ وإرسال (0)</button>`}
+function tcard(c,s,sc){if(fin(s))return`<div class="card"><div class="th"><b>${E(s.name)}</b><span class="pill ok">أتمّ المنهج ✓</span></div></div>`;
+const i=s.id,sp=span(s),st=(k,d)=>`<button type="button" onclick="stp('${k}',${d},${k.startsWith('fc')?.5:1})">${d>0?'+':'−'}</button>`;
+return`<div class="card tc" id="c_${i}"><div class="th"><b>${E(s.name)}</b></div>${bar(s)}<div class="seg3">${[['r','سمّع'],['n','حضر بلا تسميع'],['a','غائب']].map(([k,n])=>`<button type="button" data-k="${k}" onclick="tg('${i}','${k}')">${n}</button>`).join('')}</div><input type="hidden" id="st_${i}">
+<div id="f_${i}" hidden><div class="frm"><span class="mu">من (آخر موضع — ثابت)</span><b class="big">${SN[s.s]} · آية ${s.a}</b></div>
+<span class="mu">إلى</span><div class="row"><select id="s_${i}" onchange="sa('${i}')">${sp.map(n=>`<option value="${n}">${SN[n]}</option>`).join('')}</select><div><div class="stp">${st('a2_'+i,-1)}<input id="a2_${i}" type="number" min="${s.a}" max="${AC[s.s]}" inputmode="numeric" value="${Math.min(s.a+9,AC[s.s])}">${st('a2_'+i,1)}</div><span class="mu" id="mx_${i}">آية النهاية (${AD(s.a)}–${AD(AC[s.s])})</span></div></div>
+<span class="mu">نوع التسميع</span>${chips('m_'+i,c.methods,c.methods[0])}<span class="mu">عدد الوجوه</span><div class="stp">${st('fc_'+i,-1)}<input id="fc_${i}" type="number" min="0" step="0.5" inputmode="decimal" value="1">${st('fc_'+i,1)}</div>
+<span class="mu">التقييم</span>${chips('ev_'+i,sc.map(x=>x.l),'')}<button type="button" class="o" style="width:100%;margin-top:8px" onclick="showAy('${i}')">عرض الآيات</button><div id="ay_${i}"></div></div></div>`}
 const QC={},AD=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
 async function getJ(u){const c=new AbortController(),t=setTimeout(()=>c.abort(),9000);try{const x=await fetch(u,{signal:c.signal});if(!x.ok)throw new Error('HTTP '+x.status);return await x.json()}finally{clearTimeout(t)}}
 const nb=t=>t.replace(/[\u064B-\u065F\u0670\u06D6-\u06ED\u0640]/g,'').replace(/\u0671/g,'ا');
@@ -132,16 +173,23 @@ if(!r){try{const d=await getJ('https://cdn.jsdelivr.net/npm/quran-json@3.1.2/dis
 if(!r){try{const d=await getJ('https://api.alquran.cloud/v1/surah/'+c+'/quran-uthmani');const t=d.data.ayahs.map((a,k)=>k?a.text:nobism(a.text,c));if(ok(t)){r=t;src='نص عثماني (مصدر احتياطي)'}else why.push('C:'+t.length)}catch(e){why.push('C:'+(e.message||e))}}
 if(!r)throw new Error(why.join(' | '));const o={r,src};QC[n]=o;try{localStorage.setItem('q3_'+n,JSON.stringify(o))}catch(e){}return o}
 async function showAy(i){const b=$('ay_'+i);if(b.innerHTML){b.innerHTML='';return}
-const st=C().students.find(x=>x.id==i),n=+V('s_'+i);let a1=+V('a1_'+i)||1,a2=+V('a2_'+i)||a1;if(n==st.s)a1=Math.max(a1,st.a);a2=Math.min(Math.max(a2,a1),AC[n]);
-b.innerHTML='<p class="mu">جارٍ التحميل…</p>';
-try{const o=await loadSurah(n);b.innerHTML=`<div class="ay" dir="rtl">${o.r.slice(a1-1,a2).map((t,k)=>`${E(t)} <b>﴿${AD(a1+k)}﴾</b>`).join(' ')}</div><p class="mu">${SN[n]} (${a1}–${a2}) — المصدر: ${o.src}</p>`}catch(e){b.innerHTML='<p class="mu">تعذر تحميل النص ('+E(e.message||'')+')</p>'}}
-function tg(i){$('f_'+i).style.display=V('st_'+i)=='r'?'':'none'}
-function sa(i){$('ay_'+i).innerHTML='';const s=+V('s_'+i);$('a2_'+i).max=AC[s];$('a1_'+i).max=AC[s]}
-function saveEv(){const c=C(),sc=scale(c),h=c.halaqat.find(x=>x.id==S.hid);let n=0;
-c.students.filter(s=>s.h==h.id).forEach(s=>{const st=V('st_'+s.id)||'r';const l={id:uid(),d:today(),sid:s.id,h:h.id,st};let t=c.t1;
-if(st=='r'){l.m=V('m_'+s.id);l.s=+V('s_'+s.id);l.a1=+V('a1_'+s.id);l.a2=Math.min(+V('a2_'+s.id)||l.a1,AC[l.s]);l.f=parseFloat(V('fc_'+s.id))||0;l.ev=V('ev_'+s.id);const x=sc.find(y=>y.l==l.ev);l.g=x?x.v:null;
-s.s=l.s;s.a=l.a2+1;if(s.a>AC[s.s]&&s.s<s.e){s.s++;s.a=1}}else t=st=='n'?c.t2:c.t3;
-fs.collection('logs').add({...l,cid:c.id});const text=msgFill(t,{'الطالب':s.name,'التقييم':l.ev||'','السورة':l.s!=null?SN[l.s]+' '+l.a1+'-'+l.a2:'','الوجوه':l.f||0,'النوع':l.m||'','الحلقة':h.name});
-addOut(c,{id:uid(),to:s.name,ph:s.ph,text,d:today()});n++});save();alert('تم حفظ '+n+' تقييم وجُهزت رسائل أولياء الأمور في الصادر')}
+const st=C().students.find(x=>x.id==i),s2=+V('s_'+i),a2=Math.min(+V('a2_'+i)||1,AC[s2]),d=dirOf(st);b.innerHTML='<p class="mu">جارٍ التحميل…</p>';
+try{let h='',src='';for(let n=st.s;;n+=d){const o=await loadSurah(n),a1=n==st.s?st.a:1,z=n==s2?a2:AC[n];src=o.src;h+=`<div class="ay" dir="rtl"><b class="sn">${SN[n]}</b>${o.r.slice(a1-1,z).map((t,k)=>`${E(t)} <b>﴿${AD(a1+k)}﴾</b>`).join(' ')}</div>`;if(n==s2||n+d<0||n+d>113)break}
+b.innerHTML=h+`<p class="mu">المصدر: ${E(src)}</p>`}catch(e){b.innerHTML='<p class="mu">تعذر تحميل النص ('+E(e.message||'')+')</p>'}}
+function tg(i,k){$('st_'+i).value=k;document.querySelectorAll('#c_'+i+' .seg3 button').forEach(b=>b.classList.toggle('on',b.dataset.k==k));$('f_'+i).hidden=k!='r';$('c_'+i).dataset.k=k;const n=document.querySelectorAll('.tc[data-k]').length;$('sv').textContent='حفظ وإرسال ('+n+')';$('sv').disabled=!n}
+function sa(i){const s=C().students.find(x=>x.id==i),n=+V('s_'+i),e=$('a2_'+i);$('ay_'+i).innerHTML='';e.max=AC[n];e.min=n==s.s?s.a:1;e.value=n==s.s?Math.min(s.a+9,AC[n]):AC[n];$('mx_'+i).textContent='آية النهاية ('+AD(e.min)+'–'+AD(AC[n])+')'}
+function saveEv(){const c=C(),sc=scale(c),h=c.halaqat.find(x=>x.id==S.hid),Q=[];
+for(const s of c.students.filter(x=>x.h==h.id&&!fin(x))){const i=s.id,st=V('st_'+i);if(!st)continue;const o={s,st};
+if(st=='r'){o.s2=+V('s_'+i);o.a2=Math.min(+V('a2_'+i)||0,AC[o.s2]);
+if(o.a2<(o.s2==s.s?s.a:1))return alert('«'+s.name+'»: آية النهاية لا يمكن أن تكون قبل آية البداية');
+if(!V('ev_'+i))return alert('«'+s.name+'»: اختر التقييم');
+if(!(parseFloat(V('fc_'+i))>=0))return alert('«'+s.name+'»: اكتب عدد الوجوه')}
+Q.push(o)}
+if(!Q.length)return;
+Q.forEach(({s,st,s2,a2})=>{const i=s.id,l={id:uid(),d:today(),sid:i,h:h.id,st};let t=c.t1;
+if(st=='r'){l.m=V('m_'+i);l.s=s.s;l.a1=s.a;l.s2=s2;l.a2=a2;l.f=parseFloat(V('fc_'+i))||0;l.ev=V('ev_'+i);const x=sc.find(y=>y.l==l.ev);l.g=x?x.v:null;adv(s,s2,a2)}else t=st=='n'?c.t2:c.t3;
+fs.collection('logs').add({...l,cid:c.id});const text=msgFill(t,{'الطالب':s.name,'التقييم':l.ev||'','السورة':l.s!=null?rng(l):'','الوجوه':l.f||0,'النوع':l.m||'','الحلقة':h.name});
+addOut(c,{id:uid(),to:s.name,ph:s.ph,text,d:today()})});
+save();toast('تم حفظ '+Q.length+' وجُهزت رسائل أولياء الأمور');R()}
 if(OK)R();else $('app').innerHTML='<div class="card"><h2>الإعداد</h2><p>الصق إعدادات Firebase في الثابت FB أعلى الملف.</p></div>';
 </script></body></html>
