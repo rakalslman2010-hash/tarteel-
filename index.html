@@ -281,33 +281,44 @@ const SM=q=>{const a=q.split('_'),s=C().students.find(x=>x.id==a[0]),k=Object.ke
 async function getJ(u){const c=new AbortController(),t=setTimeout(()=>c.abort(),9000);try{const x=await fetch(u,{signal:c.signal});if(!x.ok)throw new Error('HTTP '+x.status);return await x.json()}finally{clearTimeout(t)}}
 const nb=t=>t.replace(/[\u064B-\u065F\u0670\u06D6-\u06ED\u0640]/g,'').replace(/\u0671/g,'ا');
 function nobism(t,n){if(n>1&&n!=9&&nb(t).startsWith('بسم الله الرحمن الرحيم '))return t.split(' ').slice(4).join(' ');return t}
-async function loadSurah(n){if(QC[n])return QC[n];try{const j=JSON.parse(localStorage.getItem('q3_'+n));if(j&&j.r&&j.r.length==AC[n]){QC[n]=j;return j}}catch(e){}
-let r=null,src='';const why=[],c=n+1;
-const ok=t=>t.length==AC[n]&&t.every(x=>typeof x=='string'&&x.length);
-try{const d=await getJ('https://api.quran.com/api/v4/quran/verses/qpc_hafs?chapter_number='+c);const t=(d.verses||[]).map(v=>v.text_qpc_hafs||v.text_uthmani||v.text);if(ok(t)){r=t;src='مجمع الملك فهد (QPC Hafs)'}else why.push('A:'+t.length)}catch(e){why.push('A:'+(e.message||e))}
-if(!r){try{const d=await getJ('https://cdn.jsdelivr.net/npm/quran-json@3.1.2/dist/chapters/'+c+'.json');const t=d.verses.map((v,k)=>k?v.text:nobism(v.text,c));if(ok(t)){r=t;src='موسوعة القرآن (QuranEnc) - مصدر احتياطي'}else why.push('B:'+t.length)}catch(e){why.push('B:'+(e.message||e))}}
-if(!r){try{const d=await getJ('https://api.alquran.cloud/v1/surah/'+c+'/quran-uthmani');const t=d.data.ayahs.map((a,k)=>k?a.text:nobism(a.text,c));if(ok(t)){r=t;src='نص عثماني (مصدر احتياطي)'}else why.push('C:'+t.length)}catch(e){why.push('C:'+(e.message||e))}}
-if(!r)throw new Error(why.join(' | '));const o={r,src};QC[n]=o;try{localStorage.setItem('q3_'+n,JSON.stringify(o))}catch(e){}return o}
+const PGK={},PC={},PGT={};
+async function pageOf(n,a){const k=(n+1)+':'+a;if(PGK[k])return PGK[k];let p=null;
+try{const d=await getJ('https://api.quran.com/api/v4/verses/by_key/'+k);p=d.verse&&d.verse.page_number}catch(e){}
+if(!p){const d=await getJ('https://api.alquran.cloud/v1/ayah/'+k);p=d.data&&d.data.page}
+if(!p)throw new Error('تعذر تحديد رقم الصفحة');PGK[k]=+p;return +p}
+async function loadPage(P){if(PC[P])return PC[P];
+try{const j=JSON.parse(localStorage.getItem('q4_'+P));if(j&&j.r&&j.r.length&&j.tot){PC[P]=j;PGT[P]=j.tot;j.r.forEach(v=>PGK[(v.n+1)+':'+v.a]=P);return j}}catch(e){}
+let r=null,src='';const why=[];
+try{const d=await getJ('https://api.quran.com/api/v4/quran/verses/qpc_hafs?page_number='+P);const t=(d.verses||[]).map(v=>{const m=String(v.verse_key).split(':');return{n:+m[0]-1,a:+m[1],t:v.text_qpc_hafs||v.text_uthmani||v.text}});if(t.length&&t.every(x=>x.t&&x.t.length&&x.a>0)){r=t;src='مجمع الملك فهد (QPC Hafs)'}else why.push('A:'+t.length)}catch(e){why.push('A:'+(e.message||e))}
+if(!r){try{const d=await getJ('https://api.alquran.cloud/v1/page/'+P+'/quran-uthmani');const t=d.data.ayahs.map(x=>({n:x.surah.number-1,a:x.numberInSurah,t:x.numberInSurah==1?nobism(x.text,x.surah.number):x.text}));if(t.length){r=t;src='نص عثماني (مصدر احتياطي)'}else why.push('B:0')}catch(e){why.push('B:'+(e.message||e))}}
+if(!r)throw new Error(why.join(' | '));
+r.forEach(v=>{v.t=cl(v.t);v.w=nb(v.t).length+1});const o={r,src,tot:r.reduce((x,v)=>x+v.w,0)};
+PC[P]=o;PGT[P]=o.tot;r.forEach(v=>PGK[(v.n+1)+':'+v.a]=P);try{localStorage.setItem('q4_'+P,JSON.stringify(o))}catch(e){}return o}
 const OKV=/^[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF\u200c\u200d\s]+$/,PK={},FACE=660,cl=t=>t.replace(/[\s\u06DD\uFD3E\uFD3F]*[\u0660-\u0669\u06F0-\u06F90-9]+\s*$/,"");
 async function pick(q){const b=$('ay_'+q);if(!b||b.innerHTML)return;
-const st=SM(q).u;if(fin(st)){b.innerHTML='<p class="mu">أتمّ الطالب هذا المنهج</p>';return}PK[q]={n:st.s,a:st.a,fin:false};
+const st=SM(q).u;if(fin(st)){b.innerHTML='<p class="mu">أتمّ الطالب هذا المنهج</p>';return}PK[q]={n:st.s,a:st.a,fin:false,pg:null};
 b.innerHTML=`<div class="ay mush" id="mu_${q}"></div><p class="mu" id="mi_${q}">اضغط على آخر آية سمّعها الطالب</p><p class="mu" id="mr_${q}"></p><button type="button" class="o" style="width:100%" id="mb_${q}" onclick="more('${q}')">الوجه التالي ▼</button>`;
 await more(q)}
 async function more(q){const st=SM(q).u,p=PK[q],box=$('mu_'+q),btn=$('mb_'+q),d=dirOf(st);if(!p||p.fin)return;
 btn.disabled=true;$('mi_'+q).textContent='جارٍ التحميل…';
-try{let ch=0,first=!box.children.length,h=first?'':'<div class="fc">الوجه التالي</div>';
-while(ch<FACE&&!p.fin){const o=await loadSurah(p.n);
-while(p.a<=AC[p.n]&&ch<FACE){if(p.a==1||first){h+=`<b class="sn">${SN[p.n]}</b>`;first=false}
-const t=cl(o.r[p.a-1]),c=nb(t).length;p.src=o.src;if(!OKV.test(t))p.bad=1;h+=`<span class="v" data-n="${p.n}" data-a="${p.a}" data-c="${c}" onclick="pv('${q}',this)">${E(t)} <b>﴿${AD(p.a)}﴾</b></span> `;ch+=c+1;p.a++}
-if(p.a>AC[p.n]){if(p.n==st.e)p.fin=true;else{p.n+=d;p.a=1}}}
+try{const P=p.pg||await pageOf(p.n,p.a),pg=await loadPage(P),first=!box.children.length;
+const vs=pg.r.filter(v=>v.n==p.n?v.a>=p.a:(d>0&&v.n>p.n&&v.n<=st.e));
+if(!vs.length)throw new Error('لا توجد آيات في هذا الوجه');
+let h=`<div class="fc">﴿ وجه ${AD(P)} ﴾ — مصحف المدينة</div>`;
+vs.forEach((v,j)=>{if(v.a==1||(first&&!j))h+=`<b class="sn">${SN[v.n]}</b>`;if(!OKV.test(v.t))p.bad=1;
+h+=`<span class="v" data-n="${v.n}" data-a="${v.a}" data-c="${v.w}" data-p="${P}" onclick="pv('${q}',this)">${E(v.t)} <b>﴿${AD(v.a)}﴾</b></span> `});
+p.src=pg.src;const L=vs[vs.length-1];p.n=L.n;p.a=L.a+1;let same=true;
+if(p.a>AC[p.n]){if(p.n==st.e)p.fin=true;else{p.n+=d;p.a=1;same=false}}
+p.pg=p.fin?null:(d>0||same?P+1:null);
 box.insertAdjacentHTML('beforeend',h);$('mr_'+q).textContent='المصدر: '+p.src+(/احتياطي/.test(p.src)?' — تنبيه: مصدر احتياطي، طابقه بالمصحف قبل الاعتماد.':'')+(p.bad?' — تنبيه: وُجد حرف غير معتاد في بعض الآيات.':'');$('mi_'+q).textContent='اضغط على آخر آية سمّعها الطالب';
 if(p.fin){btn.textContent='نهاية المنهج';}else btn.disabled=false}
 catch(e){$('mi_'+q).textContent='تعذر تحميل النص ('+(e.message||'')+')، يمكنك التحديد يدوياً';btn.disabled=false}}
-function pv(q,el){const vs=[...$('mu_'+q).querySelectorAll('.v')],k=vs.indexOf(el);let ch=0;
-vs.forEach((v,j)=>{v.classList.toggle('sel',j<=k);v.classList.toggle('end',j==k);if(j<=k)ch+=+v.dataset.c+1});
-const n=+el.dataset.n,a=+el.dataset.a,f=Math.max(.5,Math.round(ch/FACE*2)/2);
+function pv(q,el){const vs=[...$('mu_'+q).querySelectorAll('.v')],k=vs.indexOf(el),by={};
+vs.forEach((v,j)=>{v.classList.toggle('sel',j<=k);v.classList.toggle('end',j==k);if(j<=k)by[v.dataset.p]=(by[v.dataset.p]||0)+ +v.dataset.c});
+let f=0;for(const P in by)f+=by[P]/(PGT[P]||by[P]);f=Math.max(.5,Math.round(f*2)/2);
+const n=+el.dataset.n,a=+el.dataset.a;
 $('s_'+q).value=n;$('a2_'+q).value=a;$('fc_'+q).value=f;
-$('mi_'+q).innerHTML='ينتهي عند: <b>'+SN[n]+' · آية '+a+'</b> — نحو '+AD(f)+' وجه (يمكنك تعديل العدد)'}
+$('mi_'+q).innerHTML='ينتهي عند: <b>'+SN[n]+' · آية '+a+'</b> (وجه '+AD(el.dataset.p)+') — نحو '+AD(f)+' وجه (يمكنك تعديل العدد)'}
 function tg(i,k){$('st_'+i).value=k;document.querySelectorAll('#c_'+i+' .seg3 button').forEach(b=>b.classList.toggle('on',b.dataset.k==k));$('f_'+i).hidden=k!='r';$('c_'+i).dataset.k=k;const sv=$('sv');if(sv){const n=document.querySelectorAll('.tc[data-k]').length;sv.textContent='حفظ وإرسال ('+n+')';sv.disabled=!n}if(k=='r')document.querySelectorAll('#c_'+i+' .cu[data-q]').forEach(d=>{if($('on_'+d.dataset.q).checked)pick(d.dataset.q)})}
 function sa(i){const s=C().students.find(x=>x.id==i),n=+V('s_'+i),e=$('a2_'+i);$('ay_'+i).innerHTML='';e.max=AC[n];e.min=n==s.s?s.a:1;e.value=n==s.s?Math.min(s.a+9,AC[n]):AC[n];$('mx_'+i).textContent='آية النهاية ('+AD(e.min)+'–'+AD(AC[n])+')'}
 function readEv(s){const i=s.id,st=V('st_'+i);if(!st)return null;const c=C(),o={s,st,items:[]};
