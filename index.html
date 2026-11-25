@@ -50,30 +50,73 @@ summary{cursor:pointer;color:var(--pr);font-weight:700;padding:10px 0;min-height
 .mush{max-height:55vh;overflow:auto}.v{cursor:pointer;border-radius:6px;padding:2px 0}.v.sel{background:#c9a22740}.v.end{background:var(--go);color:#222}.v.end b{color:#222}
 .fc{text-align:center;color:var(--mu);font-size:13px;border-top:1px dashed var(--bd);margin:8px 0;padding-top:4px}
 </style></head><body><div id="app"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
 <script>
 const SN="الفاتحة,البقرة,آل عمران,النساء,المائدة,الأنعام,الأعراف,الأنفال,التوبة,يونس,هود,يوسف,الرعد,إبراهيم,الحجر,النحل,الإسراء,الكهف,مريم,طه,الأنبياء,الحج,المؤمنون,النور,الفرقان,الشعراء,النمل,القصص,العنكبوت,الروم,لقمان,السجدة,الأحزاب,سبأ,فاطر,يس,الصافات,ص,الزمر,غافر,فصلت,الشورى,الزخرف,الدخان,الجاثية,الأحقاف,محمد,الفتح,الحجرات,ق,الذاريات,الطور,النجم,القمر,الرحمن,الواقعة,الحديد,المجادلة,الحشر,الممتحنة,الصف,الجمعة,المنافقون,التغابن,الطلاق,التحريم,الملك,القلم,الحاقة,المعارج,نوح,الجن,المزمل,المدثر,القيامة,الإنسان,المرسلات,النبأ,النازعات,عبس,التكوير,الانفطار,المطففين,الانشقاق,البروج,الطارق,الأعلى,الغاشية,الفجر,البلد,الشمس,الليل,الضحى,الشرح,التين,العلق,القدر,البينة,الزلزلة,العاديات,القارعة,التكاثر,العصر,الهمزة,الفيل,قريش,الماعون,الكوثر,الكافرون,النصر,المسد,الإخلاص,الفلق,الناس".split(",");
 const AC="7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6".split(",").map(Number);
 const ICON=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#14795e"/><stop offset="1" stop-color="#0a3d30"/></linearGradient></defs><rect width="512" height="512" fill="url(#g)"/><circle cx="256" cy="262" r="196" fill="none" stroke="#d4af37" stroke-width="8"/><path d="M256 215c-40-26-90-30-130-18v180c40-12 90-8 130 18z" fill="#fff"/><path d="M256 215c40-26 90-30 130-18v180c-40-12-90-8-130 18z" fill="#f1e6c3"/><path d="M256 215v180" stroke="#d4af37" stroke-width="6"/><path d="M290 100a52 52 0 1 0 38 82a42 42 0 1 1-38-82z" fill="#d4af37"/></svg>`;
 const ICONURL='data:image/svg+xml,'+encodeURIComponent(ICON);
-(function(){try{const m={name:"ترتيل",short_name:"ترتيل",lang:"ar",dir:"rtl",display:"standalone",start_url:".",background_color:"#0f5a46",theme_color:"#0f5a46",icons:[{src:ICONURL,sizes:"any",type:"image/svg+xml",purpose:"any maskable"}]};
+(function(){try{const m={name:"ترتيل",short_name:"ترتيل",lang:"ar",dir:"rtl",display:"standalone",start_url:location.href,background_color:"#0f5a46",theme_color:"#0f5a46",icons:[{src:ICONURL,sizes:"any",type:"image/svg+xml",purpose:"any maskable"}]};
 const l=document.createElement('link');l.rel='manifest';l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/manifest+json'}));document.head.appendChild(l);
 const i=new Image();i.onload=()=>{const c=document.createElement('canvas');c.width=c.height=180;c.getContext('2d').drawImage(i,0,0,180,180);const a=document.createElement('link');a.rel='apple-touch-icon';a.href=c.toDataURL();document.head.appendChild(a)};i.src=ICONURL;
 const f=document.createElement('link');f.rel='icon';f.href=ICONURL;document.head.appendChild(f)}catch(e){}})();
 /* === الصق إعدادات Firebase هنا === */
-const FB={apiKey:"AIzaSyDxKFx6oqz2nVPcSS7X6K6VKo9ytHMd3-Q",authDomain:"tarteel-502a6.firebaseapp.com",projectId:"tarteel-502a6",appId:"1:174660719791:web:44c8a633fec1049674b05a"};
+const FB={apiKey:"AIzaSyDxKFx6oqz2nVPcSS7X6K6VKo9ytHMd3-Q",authDomain:"tarteel-502a6.firebaseapp.com",projectId:"tarteel-502a6",messagingSenderId:"174660719791",appId:"1:174660719791:web:44c8a633fec1049674b05a"};
 const OK=!FB.apiKey.startsWith('PASTE');let DB={gp:'1111',cx:[]},S={role:null,lr:'g',cid:null,hid:null,tab:'st',rp:null},fs,unsub=[];
 const strip=c=>{const{logs,out,...r}=c;return r};
 const save=()=>{const c=C();if(c)fs.collection('cx').doc(c.id).set(strip(c)).catch(e=>alert('تعذر الحفظ: '+e.message))};
 function soft(){const a=document.activeElement;if((a&&['INPUT','SELECT','TEXTAREA'].includes(a.tagName))||S.role=='t'||document.querySelector('.tc[data-k]'))return;if([...document.querySelectorAll('input:not([type=checkbox]),textarea')].some(x=>x.value!==x.defaultValue))return;R()}
-function listen(id){unsub.forEach(f=>f());unsub=[];
+function listen(id){tgSync();unsub.forEach(f=>f());unsub=[];
 unsub.push(fs.collection('logs').where('cid','==',id).onSnapshot(q=>{const c=DB.cx.find(x=>x.id==id);if(c){c.logs=q.docs.map(d=>d.data());soft()}}));
 unsub.push(fs.collection('out').where('cid','==',id).onSnapshot(q=>{const c=DB.cx.find(x=>x.id==id);if(c){c.out=q.docs.map(d=>({...d.data(),ref:d.id})).sort((a,b)=>b.ts-a.ts);soft()}}))}
 function addOut(c,m){fs.collection('out').add({...m,cid:c.id,ts:Date.now()})}
+/* PORTAL */
+const TK=()=>{const a=new Uint8Array(16);crypto.getRandomValues(a);return[...a].map(x=>(x%36).toString(36)).join('')};
+const plink=s=>location.origin+location.pathname+'?p='+s.tk;
+
+/* TELEGRAM (مجاني، تلقائي) */
+const TG="PASTE_BOT_TOKEN",TGU="PASTE_BOT_USERNAME",tgOn=()=>!TG.startsWith('PASTE'),wait=ms=>new Promise(z=>setTimeout(z,ms));
+const tgApi=(m,b)=>fetch('https://api.telegram.org/bot'+TG+'/'+m,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b||{})}).then(r=>r.json());
+let SY=null,TQ=Promise.resolve();
+function tgSync(){if(!tgOn())return Promise.resolve();if(SY)return SY;
+SY=(async()=>{try{const mr=fs.doc('meta/tg'),m=await mr.get(),off=m.exists?m.data().off:0;
+const r=await tgApi('getUpdates',{offset:off,timeout:0,allowed_updates:['message']});if(!r.ok||!r.result.length)return;let last=off;
+for(const u of r.result){last=u.update_id+1;const g=u.message,mt=g&&g.text&&g.text.match(/^\/start\s+([a-z0-9]{10,40})/);if(!mt)continue;
+const ref=fs.collection('pub').doc(mt[1]);if(!(await ref.get()).exists)continue;
+await ref.collection('tg').doc(String(g.chat.id)).set({t:Date.now()});tgApi('sendMessage',{chat_id:g.chat.id,text:'تم تفعيل استلام نتائج أبنائكم ✅\nستصلكم النتيجة هنا كل يوم بإذن الله.'}).catch(()=>{})}
+await mr.set({off:last})}catch(e){}finally{setTimeout(()=>{SY=null},15000)}})();return SY}
+function tgSend(tk,text){if(!tgOn())return;TQ=TQ.then(async()=>{try{await tgSync();const q=await fs.collection('pub').doc(tk).collection('tg').get();
+for(const d of q.docs){let r=await tgApi('sendMessage',{chat_id:+d.id,text});if(r.error_code==429){await wait(((r.parameters||{}).retry_after||2)*1000);r=await tgApi('sendMessage',{chat_id:+d.id,text})}
+if(r.error_code==403)d.ref.delete();await wait(60)}}catch(e){}})}
+const PUSH_URL="PASTE_WORKER_URL",PUSH_KEY="g7e9d3j28sktk317pz53y7h7";
+function pushSend(tk,text){if(PUSH_URL.startsWith('PASTE'))return;fetch(PUSH_URL,{method:'POST',headers:{'Content-Type':'application/json','x-key':PUSH_KEY},body:JSON.stringify({tk,text})}).catch(()=>{})}
+function pubRoot(c,s){if(!s.tk){const p=ph(s.ph),b=p&&c.students.find(x=>x!==s&&x.tk&&ph(x.ph)==p);s.tk=b?b.tk:TK()}const h=c.halaqat.find(x=>x.id==s.h);fs.collection('pub').doc(s.tk).set({k:{[s.id]:{n:s.name,h:h?h.name:'',p:prog(s),w:fin(s)?'أتمّ المنهج':SN[s.s]+' · آية '+s.a}},c:c.name,u:Date.now(),o:location.origin+location.pathname},{merge:true}).catch(()=>{})}
+function pubDay(c,s,d,text){pubRoot(c,s);fs.collection('pub').doc(s.tk).collection('days').doc(d).set({d,t:firebase.firestore.FieldValue.arrayUnion('👤 '+s.name+'\n'+text)},{merge:true}).catch(()=>{});{const m=text.includes(s.name)?text:'👤 '+s.name+'\n'+text;tgSend(s.tk,m);pushSend(s.tk,m)}}
+function portalCard(c){return`<div class="card"><h2>بوابة أولياء الأمور (مجانية)</h2><p class="mu">يستلم كل ولي أمر رابطاً خاصاً مرة واحدة، وبعدها تظهر له نتيجة ابنه تلقائياً كل يوم بدون رسائل.</p><button style="width:100%" onclick="sendLinks()">تجهيز رسالة الرابط لكل الطلاب</button><label class="ck"><input type="checkbox" ${c.pm?'checked':''} onchange="C().pm=this.checked;save()">إيقاف الرسائل اليومية والاكتفاء بالبوابة</label></div>`}
+function sendLinks(){const c=C();if(!c.students.length)return alert('لا يوجد طلاب');
+const g={};c.students.forEach(s=>{const k=ph(s.ph)||s.id;(g[k]=g[k]||[]).push(s)});const F=Object.values(g);
+if(!confirm('تجهيز رسالة الرابط لـ '+F.length+' ولي أمر ('+c.students.length+' طالب)؟'))return;
+F.forEach(a=>{const t=(a.find(s=>s.tk)||{}).tk||TK();a.forEach(s=>{s.tk=t;pubRoot(c,s)});const nm=a.map(s=>s.name).join('، ');
+addOut(c,{id:uid(),to:nm,ph:a[0].ph,d:today(),text:'السلام عليكم ولي أمر الطالب '+nm+'\nهذا رابطكم الخاص لمتابعة نتيجة '+(a.length>1?'أبنائكم':'ابنكم')+' يومياً (التسميع والتقييم والحضور) دون الحاجة لأي رسائل:\n'+plink(a[0])+'\nيُنصح بحفظ الرابط وإضافته للشاشة الرئيسية.'+(tgOn()?'\nولاستلام النتيجة تلقائياً بإشعار على جوالك: افتح الرابط واضغط زر تيليجرام.':'')})});save();toast('جُهزت '+F.length+' رسالة في «الصادر»');R()}
+
+const VAPID="BKlnTYdxu87JOSSiTNl3RMEtDxmoErD5ObMIJmyHtaSEE66gG6E7mIYlr3TD2-Ks68oiW9VpeOwK84OpKLBFon4";
+async function enablePush(tk){try{if(!('serviceWorker' in navigator)||!('Notification' in window))return alert('أضف الصفحة إلى الشاشة الرئيسية ثم افتحها من الأيقونة وأعد المحاولة');
+if(VAPID.startsWith('PASTE'))return alert('لم يُضبط مفتاح الإشعارات بعد (VAPID)');
+if(await Notification.requestPermission()!='granted')return alert('لم يتم السماح بالإشعارات');
+const reg=await navigator.serviceWorker.register('firebase-messaging-sw.js');
+const t=await firebase.messaging().getToken({vapidKey:VAPID,serviceWorkerRegistration:reg});
+await fs.collection('pub').doc(tk).collection('tokens').doc(t).set({t:Date.now()});toast('تم تفعيل الإشعارات ✓')}catch(e){alert('تعذر التفعيل: '+(e.message||e))}}
+function parent(tk){const a=$('app');a.innerHTML=`<div class="hero">${logo}<h1>ترتيل</h1><p>جارٍ التحميل…</p></div>`;const r=fs.collection('pub').doc(tk);let root=null,days=[];
+const draw=()=>{if(!root)return;const ks=root.k?Object.values(root.k):[{n:root.n,h:root.h,p:root.p,w:root.w}];
+a.innerHTML=`<div class="hero">${logo}<h1>ترتيل</h1><p>${E(root.c||'جمعية تحفيظ القرآن الكريم')}</p></div>`+ks.map(k=>`<div class="card"><h2>${E(k.n)}</h2><div class="mu">${E(k.h||'')}</div><div class="bar"><i style="width:${+k.p||0}%"></i></div><div class="mu">${+k.p||0}% من المنهج · ${E(k.w||'')}</div></div>`).join('')+(tgOn()?`<div class="card"><a class="w" style="background:#229ed9;display:block;text-align:center;padding:12px" target="_blank" href="https://t.me/${TGU}?start=${tk}">📩 استلام النتيجة تلقائياً على تيليجرام</a><p class="mu">اضغط الزر ثم «Start» في تيليجرام، فتصلك نتيجة أبنائك كل يوم بإشعار على جوالك.</p></div>`:'')+(VAPID.startsWith('PASTE')?'':`<div class="card"><button style="width:100%" onclick="enablePush('${tk}')">🔔 تفعيل الإشعارات</button><p class="mu">في الآيفون: أضف الصفحة إلى «الشاشة الرئيسية» أولاً، ثم افتحها من الأيقونة واضغط الزر.</p></div>`)+(days.map(x=>`<div class="card"><b>${E(x.d)}</b><div style="white-space:pre-wrap">${(x.t||[]).map(t=>E(t)).join('\n──────\n')}</div></div>`).join('')||'<div class="card mu">لا توجد نتائج بعد.</div>')};
+r.onSnapshot(d=>{if(!d.exists){a.innerHTML='<div class="card"><h2>الرابط غير صحيح</h2></div>';return}root=d.data();draw()},()=>{a.innerHTML='<div class="card"><h2>تعذر التحميل، تأكد من الاتصال</h2></div>'});
+r.collection('days').orderBy('d','desc').limit(14).onSnapshot(q=>{days=q.docs.map(d=>d.data());draw()})}
+
 function enter(id){S.role='s';S.cid=id;S.tab='st';listen(id);R()}
+const PQ=(location.search.match(/[?&]p=([a-z0-9]{10,40})/)||[])[1];
 if(OK){firebase.initializeApp(FB);fs=firebase.firestore();fs.enablePersistence({synchronizeTabs:true}).catch(()=>{});
-fs.doc('meta/main').onSnapshot(d=>{if(d.exists)DB.gp=d.data().gp});
-fs.collection('cx').onSnapshot(q=>{DB.cx=q.docs.map(d=>{const o=d.data(),p=DB.cx.find(x=>x.id==o.id);o.logs=p?p.logs:[];o.out=p?p.out:[];return o});soft()})}
+if(!PQ)fs.doc('meta/main').onSnapshot(d=>{if(d.exists)DB.gp=d.data().gp});
+if(!PQ)fs.collection('cx').onSnapshot(q=>{DB.cx=q.docs.map(d=>{const o=d.data(),p=DB.cx.find(x=>x.id==o.id);o.logs=p?p.logs:[];o.out=p?p.out:[];return o});soft()})}
 const uid=()=>Math.random().toString(36).slice(2,9);
 const E=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
@@ -130,10 +173,15 @@ function mvH(i,h){C().students.find(s=>s.id==i).h=h;save();R()}
 function mvS(i){const s=C().students.find(s=>s.id==i),n=+V('ms_'+i);s.s=n;s.a=Math.max(1,Math.min(+V('ma_'+i)||1,AC[n]));save();toast('تم حفظ الموضع');R()}
 function msgFill(t,o){return t.replace(/\{(.+?)\}/g,(m,k)=>o[k]??m)}
 function tMsg(c){const sel=c.students.map(s=>`<label class="ck"><input type="checkbox" class="ms" value="${s.id}"><span>${E(s.name)} <span class="mu">${E((c.halaqat.find(h=>h.id==s.h)||{}).name||'')}</span></span></label>`).join('');
-return`<div class="card"><h2>رسالة عامة</h2><p class="mu">رقم واتساب المجمع: ${E(c.wa||'غير مربوط')}</p><textarea id="mt" placeholder="نص الرسالة"></textarea><label class="ck"><input type="checkbox" onchange="document.querySelectorAll('.ms').forEach(x=>x.checked=this.checked)"><b>تحديد الكل</b></label>${sel||'<p class="mu">لا طلاب</p>'}<button onclick="qMsg()">إضافة إلى الصادر</button></div>`+outbox(c)}
+return portalCard(c)+`<div class="card"><h2>رسالة عامة</h2><p class="mu">رقم واتساب المجمع: ${E(c.wa||'غير مربوط')}</p><textarea id="mt" placeholder="نص الرسالة"></textarea><label class="ck"><input type="checkbox" onchange="document.querySelectorAll('.ms').forEach(x=>x.checked=this.checked)"><b>تحديد الكل</b></label>${sel||'<p class="mu">لا طلاب</p>'}<button onclick="qMsg()">إضافة إلى الصادر</button></div>`+outbox(c)}
 function qMsg(){const c=C(),t=V('mt').trim(),ids=[...document.querySelectorAll('.ms:checked')].map(x=>x.value);if(!t||!ids.length)return alert('اكتب الرسالة وحدد الطلاب');
 ids.forEach(i=>{const s=c.students.find(x=>x.id==i);addOut(c,{id:uid(),to:s.name,ph:s.ph,text:t,d:today()})});R()}
-function outbox(c){return`<div class="card"><h2>الصادر (${c.out.length})</h2>${c.out.length?'<button style="width:100%;margin-bottom:8px" onclick="exX()">تصدير إكسل للإرسال الجماعي</button>':''}${c.out.slice(0,60).map(m=>`<div class="st"><b>${E(m.to)}</b> <span class="mu">${m.d}</span><div class="mu" style="white-space:pre-wrap">${E(m.text)}</div><a class="w" target="_blank" rel="noopener" href="https://wa.me/${ph(m.ph)}?text=${encodeURIComponent(m.text)}">إرسال واتساب</a></div>`).join('')||'<p class="mu">فارغ</p>'}${c.out.length?`<button class="s" style="margin:8px 0 0 8px" onclick="exX()">تصدير إكسل</button><button class="o s" style="margin-top:8px" onclick="if(confirm('مسح الصادر؟')){C().out.forEach(m=>fs.collection('out').doc(m.ref).delete())}">مسح</button>`:''}</div>`}
+const pend=c=>c.out.filter(m=>!m.sent&&ph(m.ph)).sort((a,b)=>a.ts-b.ts);
+function mk(r){fs.collection('out').doc(r).update({sent:1}).catch(()=>{})}
+function nxt(){const c=C(),m=pend(c)[0];if(!m)return toast('انتهت كل الرسائل');mk(m.ref);m.sent=1;window.open('https://wa.me/'+ph(m.ph)+'?text='+encodeURIComponent(m.text),'_blank');R()}
+function rt(r){fs.collection('out').doc(r).update({err:firebase.firestore.FieldValue.delete()}).catch(()=>{})}
+function outbox(c){const n=pend(c).length,nop=c.out.filter(m=>!m.sent&&!ph(m.ph)).length;
+return`<div class="card"><h2>الصادر (${c.out.length}) · المتبقي ${n}</h2>${n?`<button style="width:100%;min-height:58px;font-size:18px;margin-bottom:8px" onclick="nxt()">إرسال التالي (${n} متبقٍ)</button><p class="mu">كل ضغطة تفتح واتساب برسالة الطالب التالي. اضغط «إرسال» في واتساب ثم ارجع للتطبيق واضغط «إرسال التالي».</p>`:''}${nop?`<p class="mu">${nop} رسالة بلا رقم جوال صحيح، لن تُرسل.</p>`:''}${c.out.length?'<button class="o" style="width:100%;margin-bottom:8px" onclick="exX()">تصدير إكسل (نسخة أو لنظام إرسال جماعي)</button>':''}${c.out.slice(0,400).map(m=>`<div class="st" style="opacity:${m.sent?.55:1}"><b>${E(m.to)}</b> <span class="mu">${m.d}</span> ${m.sent?'<span class="pill ok">أُرسلت ✓</span>':''}${m.err?`<span class="pill" style="color:#b3382c">فشل: ${E(m.err)}</span> <button class="o s" onclick="rt('${m.ref}')">إعادة</button>`:''}<div class="mu" style="white-space:pre-wrap">${E(m.text)}</div><a class="w" target="_blank" rel="noopener" href="https://wa.me/${ph(m.ph)}?text=${encodeURIComponent(m.text)}" onclick="mk('${m.ref}')">إرسال واتساب</a></div>`).join('')||'<p class="mu">فارغ</p>'}${c.out.length?`<button class="o s" style="margin:8px 0 0 8px" onclick="if(confirm('حذف الرسائل المُرسلة؟')){C().out.filter(m=>m.sent).forEach(m=>fs.collection('out').doc(m.ref).delete())}">حذف المُرسلة</button><button class="o s" style="margin-top:8px" onclick="if(confirm('مسح كل الصادر؟')){C().out.forEach(m=>fs.collection('out').doc(m.ref).delete())}">مسح الكل</button>`:''}</div>`}
 function exX(){const c=C();if(!c.out.length)return alert('الصادر فارغ');
 const rows=[['الاسم','رقم الجوال','الرسالة','التاريخ']].concat(c.out.slice().reverse().map(m=>[m.to,ph(m.ph),m.text,m.d]));
 if(window.XLSX){const w=XLSX.utils.aoa_to_sheet(rows),b=XLSX.utils.book_new();w['!cols']=[{wch:22},{wch:16},{wch:70},{wch:12}];XLSX.utils.book_append_sheet(b,w,'الرسائل');XLSX.writeFile(b,'رسائل-'+today()+'.xlsx')}
@@ -210,11 +258,11 @@ return o}
 function logEv(c,h,o,d){const{s,st,s2,a2}=o,i=s.id,sc=scale(c),l={id:uid(),d,sid:i,h:h.id,st};let t=c.t1;
 if(st=='r'){l.m=V('m_'+i);l.s=s.s;l.a1=s.a;l.s2=s2;l.a2=a2;l.f=parseFloat(V('fc_'+i))||0;l.ev=V('ev_'+i);const x=sc.find(y=>y.l==l.ev);l.g=x?x.v:null;adv(s,s2,a2)}else t=st=='n'?c.t2:c.t3;
 fs.collection('logs').add({...l,cid:c.id});const text=msgFill(t,{'الطالب':s.name,'التقييم':l.ev||'','السورة':l.s!=null?rng(l):'','الوجوه':l.f||0,'النوع':l.m||'','الحلقة':h.name});
-addOut(c,{id:uid(),to:s.name,ph:s.ph,text,d})}
+pubDay(c,s,d,text);if(!c.pm)addOut(c,{id:uid(),to:s.name,ph:s.ph,text,d})}
 function saveEv(){const c=C(),h=c.halaqat.find(x=>x.id==S.hid),Q=[];
 for(const s of c.students.filter(x=>x.h==h.id&&!fin(x))){const o=readEv(s);if(o===false)return;if(o)Q.push(o)}
 if(!Q.length)return;Q.forEach(o=>logEv(c,h,o,today()));save();toast('تم حفظ '+Q.length+' وجُهزت رسائل أولياء الأمور');R()}
 function supSave(i){const c=C(),s=c.students.find(x=>x.id==i),o=readEv(s);if(o===false)return;if(!o)return alert('اختر حالة الطالب أولاً');
 logEv(c,c.halaqat.find(x=>x.id==s.h),o,V('sdt_'+i)||today());save();toast('تمت إضافة التسميع');R()}
-if(OK)R();else $('app').innerHTML='<div class="card"><h2>الإعداد</h2><p>الصق إعدادات Firebase في الثابت FB أعلى الملف.</p></div>';
+if(OK){PQ?parent(PQ):R()}else $('app').innerHTML='<div class="card"><h2>الإعداد</h2><p>الصق إعدادات Firebase في الثابت FB أعلى الملف.</p></div>';
 </script></body></html>
