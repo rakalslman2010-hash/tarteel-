@@ -88,7 +88,7 @@ await mr.set({off:last})}catch(e){}finally{setTimeout(()=>{SY=null},15000)}})();
 function tgSend(tk,text){if(!tgOn())return;TQ=TQ.then(async()=>{try{await tgSync();const q=await fs.collection('pub').doc(tk).collection('tg').get();
 for(const d of q.docs){let r=await tgApi('sendMessage',{chat_id:+d.id,text});if(r.error_code==429){await wait(((r.parameters||{}).retry_after||2)*1000);r=await tgApi('sendMessage',{chat_id:+d.id,text})}
 if(r.error_code==403)d.ref.delete();await wait(60)}}catch(e){}})}
-const PUSH_URL="PASTE_WORKER_URL",PUSH_KEY="g7e9d3j28sktk317pz53y7h7";
+const PUSH_URL="https://tarteel.rakalslman2010.workers.dev",PUSH_KEY="g7e9d3j28sktk317pz53y7h7";
 function pushSend(tk,text){if(PUSH_URL.startsWith('PASTE'))return;fetch(PUSH_URL,{method:'POST',headers:{'Content-Type':'application/json','x-key':PUSH_KEY},body:JSON.stringify({tk,text})}).catch(()=>{})}
 function pubRoot(c,s){if(!s.tk){const p=ph(s.ph),b=p&&c.students.find(x=>x!==s&&x.tk&&ph(x.ph)==p);s.tk=b?b.tk:TK()}const h=c.halaqat.find(x=>x.id==s.h);fs.collection('pub').doc(s.tk).set({k:{[s.id]:{n:s.name,h:h?h.name:'',p:prog(s),w:fin(s)?'أتمّ المنهج':SN[s.s]+' · آية '+s.a}},c:c.name,u:Date.now(),o:location.origin+location.pathname},{merge:true}).catch(()=>{})}
 function pubDay(c,s,d,text){pubRoot(c,s);fs.collection('pub').doc(s.tk).collection('days').doc(d).set({d,t:firebase.firestore.FieldValue.arrayUnion('👤 '+s.name+'\n'+text)},{merge:true}).catch(()=>{});{const m=text.includes(s.name)?text:'👤 '+s.name+'\n'+text;tgSend(s.tk,m);pushSend(s.tk,m)}}
